@@ -19,8 +19,6 @@ struct device machines[] = {
     {ARCONDICIONADO_01, LOW},
     {ARCONDICIONADO_02, LOW}};
 
-struct servidorDistribuido *update;
-
 struct timeval last_change;
 
 int sensorsSize = 8, machinesSize = 6;
@@ -44,7 +42,7 @@ void handleSALA(void)
     // Filter jitter
     if (diff > IGNORE_CHANGE_BELOW_USEC)
     {
-        if (update->sensors[0].state)
+        if (sensors[0].state)
         {
             printf("Falling\n");
         }
@@ -53,10 +51,10 @@ void handleSALA(void)
             printf("Rising\n");
         }
 
-        update->sensors[0].state = !update->sensors[0].state;
+        sensors[0].state = !sensors[0].state;
     }
+
     last_change = now;
-    send_TCP_message(update);
 }
 void handleCOZINHA(void)
 {
@@ -71,7 +69,7 @@ void handleCOZINHA(void)
     // Filter jitter
     if (diff > IGNORE_CHANGE_BELOW_USEC)
     {
-        if (update->sensors[1].state)
+        if (sensors[1].state)
         {
             printf("Falling\n");
         }
@@ -80,10 +78,10 @@ void handleCOZINHA(void)
             printf("Rising\n");
         }
 
-        update->sensors[1].state = !update->sensors[1].state;
+        sensors[1].state = !sensors[1].state;
     }
+
     last_change = now;
-    send_TCP_message(update);
 }
 void handlePORTA_COZINHA(void)
 {
@@ -98,7 +96,7 @@ void handlePORTA_COZINHA(void)
     // Filter jitter
     if (diff > IGNORE_CHANGE_BELOW_USEC)
     {
-        if (update->sensors[2].state)
+        if (sensors[2].state)
         {
             printf("Falling\n");
         }
@@ -107,10 +105,10 @@ void handlePORTA_COZINHA(void)
             printf("Rising\n");
         }
 
-        update->sensors[2].state = !update->sensors[2].state;
+        sensors[2].state = !sensors[2].state;
     }
+
     last_change = now;
-    send_TCP_message(update);
 }
 void handleJANELA_COZINHA(void)
 {
@@ -125,7 +123,7 @@ void handleJANELA_COZINHA(void)
     // Filter jitter
     if (diff > IGNORE_CHANGE_BELOW_USEC)
     {
-        if (update->sensors[3].state)
+        if (sensors[3].state)
         {
             printf("Falling\n");
         }
@@ -134,10 +132,10 @@ void handleJANELA_COZINHA(void)
             printf("Rising\n");
         }
 
-        update->sensors[3].state = !update->sensors[3].state;
+        sensors[3].state = !sensors[3].state;
     }
+
     last_change = now;
-    send_TCP_message(update);
 }
 void handlePORTA_SALA(void)
 {
@@ -152,7 +150,7 @@ void handlePORTA_SALA(void)
     // Filter jitter
     if (diff > IGNORE_CHANGE_BELOW_USEC)
     {
-        if (update->sensors[4].state)
+        if (sensors[4].state)
         {
             printf("Falling\n");
         }
@@ -161,10 +159,10 @@ void handlePORTA_SALA(void)
             printf("Rising\n");
         }
 
-        update->sensors[4].state = !update->sensors[4].state;
+        sensors[4].state = !sensors[4].state;
     }
+
     last_change = now;
-    send_TCP_message(update);
 }
 void handleJANELA_SALA(void)
 {
@@ -179,7 +177,7 @@ void handleJANELA_SALA(void)
     // Filter jitter
     if (diff > IGNORE_CHANGE_BELOW_USEC)
     {
-        if (update->sensors[5].state)
+        if (sensors[5].state)
         {
             printf("Falling\n");
         }
@@ -188,10 +186,10 @@ void handleJANELA_SALA(void)
             printf("Rising\n");
         }
 
-        update->sensors[5].state = !update->sensors[5].state;
+        sensors[5].state = !sensors[5].state;
     }
+
     last_change = now;
-    send_TCP_message(update);
 }
 void handleJANELA_QUARTO_01(void)
 {
@@ -206,7 +204,7 @@ void handleJANELA_QUARTO_01(void)
     // Filter jitter
     if (diff > IGNORE_CHANGE_BELOW_USEC)
     {
-        if (update->sensors[6].state)
+        if (sensors[6].state)
         {
             printf("Falling\n");
         }
@@ -215,10 +213,10 @@ void handleJANELA_QUARTO_01(void)
             printf("Rising\n");
         }
 
-        update->sensors[6].state = !update->sensors[6].state;
+        sensors[6].state = !sensors[6].state;
     }
+
     last_change = now;
-    send_TCP_message(update);
 }
 void handleJANELA_QUARTO_02(void)
 {
@@ -233,7 +231,7 @@ void handleJANELA_QUARTO_02(void)
     // Filter jitter
     if (diff > IGNORE_CHANGE_BELOW_USEC)
     {
-        if (update->sensors[7].state)
+        if (sensors[7].state)
         {
             printf("Falling\n");
         }
@@ -242,35 +240,34 @@ void handleJANELA_QUARTO_02(void)
             printf("Rising\n");
         }
 
-        update->sensors[7].state = !update->sensors[7].state;
+        sensors[7].state = !sensors[7].state;
     }
+
     last_change = now;
-    send_TCP_message(update);
 }
 
 void toggle()
 {
-    *update = *updateValues();
-    for (int i = 0; i < sensorsSize; i++)
-    {
-        pinMode(update->sensors[i].port, OUTPUT);
-        update->sensors[i].state = digitalRead(sensors[i].port);
-    }
     for (int i = 0; i < machinesSize; i++)
     {
-        pinMode(update->machines[i].port, OUTPUT);
-        update->machines[i].state = digitalRead(machines[i].port);
+        pinMode(machines[i].port, OUTPUT);
+        machines[i].state = digitalRead(machines[i].port);
     }
-    send_TCP_message(update);
+    for (int i = 0; i < sensorsSize; i++)
+    {
+        pinMode(sensors[i].port, OUTPUT);
+        sensors[i].state = digitalRead(sensors[i].port);
+    }
+    
     gettimeofday(&last_change, NULL);
-    wiringPiISR(update->sensors[0].port, INT_EDGE_BOTH, &handleSALA);
-    wiringPiISR(update->sensors[1].port, INT_EDGE_BOTH, &handleCOZINHA);
-    wiringPiISR(update->sensors[2].port, INT_EDGE_BOTH, &handlePORTA_COZINHA);
-    wiringPiISR(update->sensors[3].port, INT_EDGE_BOTH, &handleJANELA_COZINHA);
-    wiringPiISR(update->sensors[4].port, INT_EDGE_BOTH, &handlePORTA_SALA);
-    wiringPiISR(update->sensors[5].port, INT_EDGE_BOTH, &handleJANELA_SALA);
-    wiringPiISR(update->sensors[6].port, INT_EDGE_BOTH, &handleJANELA_QUARTO_01);
-    wiringPiISR(update->sensors[7].port, INT_EDGE_BOTH, &handleJANELA_QUARTO_02);
+    wiringPiISR(sensors[0].port, INT_EDGE_BOTH, &handleSALA);
+    wiringPiISR(sensors[1].port, INT_EDGE_BOTH, &handleCOZINHA);
+    wiringPiISR(sensors[2].port, INT_EDGE_BOTH, &handlePORTA_COZINHA);
+    wiringPiISR(sensors[3].port, INT_EDGE_BOTH, &handleJANELA_COZINHA);
+    wiringPiISR(sensors[4].port, INT_EDGE_BOTH, &handlePORTA_SALA);
+    wiringPiISR(sensors[5].port, INT_EDGE_BOTH, &handleJANELA_SALA);
+    wiringPiISR(sensors[6].port, INT_EDGE_BOTH, &handleJANELA_QUARTO_01);
+    wiringPiISR(sensors[7].port, INT_EDGE_BOTH, &handleJANELA_QUARTO_02);
 
     // while (1)
     // {
@@ -280,8 +277,8 @@ void toggle()
 
 int gpioLigaEquipamentos(int option)
 {
-    digitalWrite(update->machines[option].port, !update->machines[option].state);
-    update->machines[option].state = !update->machines[option].state;
+    digitalWrite(machines[option].port, !machines[option].state);
+    machines[option].state = !machines[option].state;
     // updateValues
 }
 
@@ -306,7 +303,7 @@ void checaSensoresGPIO()
     // send_TCP_message(newValues);
 }
 
-struct servidorDistribuido *updateValues()
+struct servidorDistribuido *setInitialValues()
 {
     struct servidorDistribuido *newValues = malloc(sizeof(struct servidorDistribuido));
 
@@ -315,6 +312,7 @@ struct servidorDistribuido *updateValues()
     bme280ReadValues(&T, &P, &H);
     newValues->temperatura = T/100.0;
     newValues->umidade = H/1000.0;
+    printf("newvaluestemp = %f\n", newValues->temperatura);
 
     for (int i = 0; i < 6; i++)
     {

@@ -9,7 +9,7 @@ void menu()
     printf("------- Bem vindo ao trabalho 2 -------\n");
     while (opcao != 9)
     {
-        newValues = updateValues();
+        newValues = setInitialValues();
         printf("Escolha um comando de 0 a 5.\n 0 a 3 sendo as lâmpadas,\n 4 e 5 ar - condicionados\n 9 - Sair\n");
         // printf("Estado atual:");
         printf("Temperatura: %f\n", newValues->temperatura);

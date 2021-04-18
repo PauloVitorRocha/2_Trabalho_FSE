@@ -42,11 +42,12 @@ int main()
     i2c_TemperaturaUmidade();
     gpioSensores();
     menu();
+    // sendUpdate();
 
     // regulateTemperature();
     // pthread_create(&t1, NULL, gpioSensores, NULL);
     // pthread_join(t1, NULL);
-    pthread_create(&t2, NULL, i2c_TemperaturaUmidade, NULL);
+    // pthread_create(&t2, NULL, i2c_TemperaturaUmidade, NULL);
     // pthread_join(t2, NULL);
     // pthread_create(&t3, NULL, sendUpdate, NULL);
     // pthread_join(t3, NULL);
@@ -58,7 +59,6 @@ int main()
 void *gpioSensores()
 {
     gpio_init();
-
 }
 
 void *i2c_TemperaturaUmidade()
@@ -80,14 +80,10 @@ void *i2c_TemperaturaUmidade()
 
 void *sendUpdate()
 {
-    while (keepThreading)
-    {
-        *update = *updateValues();
+    *update = *setInitialValues();
+    printf("temp = %f\n", update->temperatura);
         update->temperatura = temp;
-        update->umidade = humidity;
-        sleep(1);
-        send_TCP_message(update);
-    }
-
-    return NULL;
+    update->umidade = humidity;
+    // sleep(1);
+    send_TCP_message(update);
 }

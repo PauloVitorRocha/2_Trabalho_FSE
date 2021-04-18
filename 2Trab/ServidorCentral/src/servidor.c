@@ -20,22 +20,20 @@ void TrataClienteTCP()
     int cont = 0;
     struct servidorCentral *intermediario = malloc(sizeof(struct servidorCentral));
 
-    do
+    if ((tamanhoRecebido = recv(socketCliente, (void *)intermediario, sizeof(struct servidorCentral), 0)) < 0)
     {
-        if ((tamanhoRecebido = recv(socketCliente, (void *)intermediario, sizeof(struct servidorCentral), 0)) < 0)
-        {
-            printf("Erro no recv()");
-        }
+        printf("Erro no recv()");
+    }
 
-        printf("%f %f\n", intermediario->temperatura, intermediario->umidade);
-        for(int i=0;i<6;i++){
-        	printf("machines %d %d\n",intermediario->machines[i].port,intermediario->machines[i].state);
-        }
-        for(int i=0;i<8;i++){
-        	printf("sensors %d %d\n",intermediario->sensors[i].port,intermediario->sensors[i].state);
-        }
-
-    } while (tamanhoRecebido > 0);
+    printf("%f %f\n", intermediario->temperatura, intermediario->umidade);
+    for (int i = 0; i < 6; i++)
+    {
+        printf("machines %d %d\n", intermediario->machines[i].port, intermediario->machines[i].state);
+    }
+    for (int i = 0; i < 8; i++)
+    {
+        printf("sensors %d %d\n", intermediario->sensors[i].port, intermediario->sensors[i].state);
+    }
     close(socketCliente);
 }
 
@@ -87,7 +85,8 @@ void Servidor()
             printf("Falha no Accept\n");
             continue;
         }
-        else{
+        else
+        {
             printf("aqui estou\n");
             TrataClienteTCP();
         }

@@ -36,6 +36,6 @@ void trata_interrupcao_gpio(void);
 
 extern volatile int restartClient;
 
-struct servidorDistribuido *updateValues();
+struct servidorDistribuido *setInitialValues();
 
 #endif /* GPIO_H_ */

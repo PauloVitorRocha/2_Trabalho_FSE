@@ -3,18 +3,48 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include "../inc/servidor.h"
 struct sockaddr_in servidorAddr;
 struct sockaddr_in clienteAddr;
 unsigned short servidorPorta;
 unsigned int clienteLength;
 
+int servidorSocket;
+int socketCliente;
+
+void TrataClienteTCP()
+{
+    printf("Tratando Cliente TCP\n");
+    int tamanhoRecebido;
+    int alarmPlaying = 0;
+    int cont = 0;
+    struct servidorCentral *intermediario = malloc(sizeof(struct servidorCentral));
+
+    do
+    {
+        if ((tamanhoRecebido = recv(socketCliente, (void *)intermediario, sizeof(struct servidorCentral), 0)) < 0)
+        {
+            printf("Erro no recv()");
+        }
+
+        printf("%f %f\n", intermediario->temperatura, intermediario->umidade);
+        for(int i=0;i<6;i++){
+        	printf("machines %d %d\n",intermediario->machines[i].port,intermediario->machines[i].state);
+        }
+        for(int i=0;i<8;i++){
+        	printf("sensors %d %d\n",intermediario->sensors[i].port,intermediario->sensors[i].state);
+        }
+
+    } while (tamanhoRecebido > 0);
+    close(socketCliente);
+}
+
 void Servidor()
 {
-    int servidorSocket;
-    int socketCliente;
-    char client_message[200] = {0};
-    char message[100] = {0};
-    const char *pMessage = "hello aticleworld.com";
+    struct sockaddr_in servidorAddr;
+    struct sockaddr_in clienteAddr;
+    unsigned short servidorPorta;
+    unsigned int clienteLength;
 
     // Porta Servidor Distribuido
     servidorPorta = 10024;
@@ -50,25 +80,18 @@ void Servidor()
 
     while (1)
     {
-        printf("Waiting for incoming connections...\n");
         clienteLength = sizeof(clienteAddr);
+        printf("Aguardando conexão\n");
         if ((socketCliente = accept(servidorSocket, (struct sockaddr *)&clienteAddr, &clienteLength)) < 0)
         {
-
             printf("Falha no Accept\n");
             continue;
         }
         else{
-            printf("Connection accepted\n");
+            printf("aqui estou\n");
+            TrataClienteTCP();
         }
-
-        // setClientConection(inet_ntoa(clienteAddr.sin_addr));
         close(socketCliente);
     }
     close(servidorSocket);
-}
-
-int main(){
-    Servidor();
-    return 0;
 }

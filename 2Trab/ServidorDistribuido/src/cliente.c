@@ -4,16 +4,44 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include "../inc/cliente.h"
+
 //Create a Socket for server communication
 
 int clienteSocket;
-int Cliente(){
+
+int send_TCP_message(struct servidorDistribuido *updates)
+{
+    printf("IN TCP MSG: %f %f\n", updates->temperatura, updates->umidade);
+
+    unsigned int tamanhoMensagem;
+    tamanhoMensagem = sizeof(struct servidorDistribuido);
+    // printf("Tamanho da msg = %d\n", tamanhoMensagem);
+    // printf("Tamanho de updates = %d\n", sizeof(updates));
+
+    int t1;
+    if (t1 = send(clienteSocket, updates, tamanhoMensagem, 0), t1 != tamanhoMensagem)
+    {
+        printf("Erro no envio: numero de bytes enviados diferente do esperado\n");
+        close(clienteSocket);
+        return 1;
+    }
+    else{
+        printf("Mensagem enviada com sucesso\n");
+        close(clienteSocket);
+    }
+
+    return 0;
+}
+
+int Cliente()
+{
     struct sockaddr_in servidorAddr;
     unsigned short servidorPorta;
     char *IP_Servidor;
 
     // Ip servidor distribuido, porta servidor distribuido
-    IP_Servidor = "127.0.0.1";
+    IP_Servidor = "192.168.0.9";
     servidorPorta = 10024;
 
     // Criar Socket
@@ -35,28 +63,11 @@ int Cliente(){
         printf("Cliente Central não conseguiu conectar com o Servidor Distribuido");
         return 1;
     }
-    else{
+    else
+    {
         printf("Sucessfully conected with server\n");
     }
-    close(clienteSocket);
-    
-    return 0;
-}
-// int send_TCP_message(int msgNumber)
-// {
-//     int t1;
-//     if (t1 = send(clienteSocket, msgNumber, sizeof(int), 0), t1 != sizeof(int))
-//     {
-//         printf("Erro no envio: numero de bytes enviados diferente do esperado\n");
-//         return 1;
-//     }
+    // close(clienteSocket);
 
-//     return 0;
-//     //close(clienteSocket);
-// }
-
-int main(){
-    Cliente();
-    // send_TCP_message(999);
     return 0;
 }

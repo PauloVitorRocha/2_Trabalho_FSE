@@ -20,6 +20,7 @@ static int file_i2c = 0;
 static int calT1, calT2, calT3;
 static int calP1, calP2, calP3, calP4, calP5, calP6, calP7, calP8, calP9;
 static int calH1, calH2, calH3, calH4, calH5, calH6;
+char filename[32];
 
 //
 // Opens a file system handle to the I2C device
@@ -32,7 +33,6 @@ static int calH1, calH2, calH3, calH4, calH5, calH6;
     int i, rc;
     unsigned char ucTemp[32];
     unsigned char ucCal[36];
-    char filename[32];
 
     sprintf(filename, "/dev/i2c-%d", iChannel);
     if ((file_i2c = open(filename, O_RDWR)) < 0)
@@ -222,3 +222,7 @@ int bme280Start(int iChannel, int iAddr, int *T, int *P, int *H)
     bme280Init(iChannel, iAddr);
     bme280ReadValues(T, P, H);
 }
+
+int endI2C(){
+    close(file_i2c);
+    }

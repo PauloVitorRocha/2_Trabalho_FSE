@@ -6,44 +6,29 @@
 #include <bcm2835.h>
 #include <signal.h>
 
+struct device
+{
+    int port;
+    int state;
+};
+
+#define SENSOR_PRESENCA_SALA RPI_V2_GPIO_P1_22 //GPIO 25
+
 // Define some device parameters
 #define I2C_ADDR 0x76 // I2C device address
 #define I2C_CH 1 // I2C device channel
-#define LAMPADA01 0  //GPIO 17
-#define LAMPADA02 1  //GPIO 18
-#define LAMPADA03 2  //GPIO 27
-#define LAMPADA04 3  //GPIO 22
-#define SENSORPRESENCA01 RPI_V2_GPIO_P1_22 //GPIO 25
-#define SENSORPRESENCA02 RPI_V2_GPIO_P1_37 //GPIO 26
-#define SENSORABERTURA01 RPI_V2_GPIO_P1_29 //GPIO 05
-#define SENSORABERTURA02 RPI_V2_GPIO_P1_31 //GPIO 06
-#define SENSORABERTURA03 RPI_V2_GPIO_P1_32 //GPIO 12
-#define SENSORABERTURA04 RPI_V2_GPIO_P1_36 //GPIO 16
-#define SENSORABERTURA05 RPI_V2_GPIO_P1_38 //GPIO 20
-#define SENSORABERTURA06 RPI_V2_GPIO_P1_40 //GPIO 21
-// #define AC01 23  //GPIO 13
-// #define AC02 24  //GPIO 19
-// #define SP01 6   //GPIO 25
-// #define SP02 25  //GPIO 26
-// #define SA01 21  //GPIO 05
-// #define SA02 22  //GPIO 06
-// #define SA03 26  //GPIO 12 //WiringPi 26
-// #define SA04 27  //GPIO 16
-// #define SA05 28  //GPIO 20
-// #define SA06 29  //GPIO 21
 
-void configura_pinos()
-{
+    void configura_pinos(){
 
     // Define botão como entrada
-    bcm2835_gpio_fsel(SENSOR1, BCM2835_GPIO_FSEL_INPT);
+    bcm2835_gpio_fsel(SENSOR_PRESENCA_SALA, BCM2835_GPIO_FSEL_INPT);
     // Configura entrada do botão como Pull-up
-    bcm2835_gpio_set_pud(SENSOR1, BCM2835_GPIO_PUD_UP);
+    bcm2835_gpio_set_pud(SENSOR_PRESENCA_SALA, BCM2835_GPIO_PUD_UP);
 
-    // bcm2835_gpio_hen(SENSOR1); // Evento HIGH
-    //bcm2835_gpio_len(SENSOR1); // Evento LOW
-    bcm2835_gpio_ren(SENSOR1); // Evento Rising Edge
-    // bcm2835_gpio_fen(SENSOR1); // Evento Falling Edge
+    // bcm2835_gpio_hen(SENSOR_PRESENCA_SALA); // Evento HIGH
+    //bcm2835_gpio_len(SENSOR_PRESENCA_SALA); // Evento LOW
+    bcm2835_gpio_ren(SENSOR_PRESENCA_SALA); // Evento Rising Edge
+    // bcm2835_gpio_fen(SENSOR_PRESENCA_SALA); // Evento Falling Edge
 }
 
 
@@ -71,10 +56,10 @@ int main()
     while (1)
     {
 
-        bcm2835_gpio_set_eds(SENSOR1);
-        sleep(5);
+        bcm2835_gpio_set_eds(SENSOR_PRESENCA_SALA);
+        sleep(10);
 
-        if (bcm2835_gpio_eds(SENSOR1))
+        if (bcm2835_gpio_eds(SENSOR_PRESENCA_SALA))
         {
             printf("Botão apertado!\n");
             fflush(stdout);

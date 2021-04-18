@@ -1,0 +1,26 @@
+#ifndef _MAIN_H_
+#define _MAIN_H_
+
+#include <pthread.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <sys/time.h>
+#include "gpio.h"
+#include "bme280.h"
+// #include "servidor.h"
+#include "cliente.h"
+
+void *gpioLampadasArCondicionado();
+void *i2c_TemperaturaUmidade();
+void *gpioSensores();
+void trataSinalAlarme(int sinal);
+void interruption(int sig);
+void *sendUpdate();
+void *connectClient();
+void trataErroSocket(int signal);
+void *regulateTemperature();
+
+#endif

@@ -28,7 +28,8 @@ void TrataClienteTCP()
         printf("Erro no recv()");
     }
     else{
-        printf("accepted msg\n");
+        printf("Temperatura: %f\n", intermediario->temperatura);
+        printf("Umidade: %f\n", intermediario->umidade);
         for(int i=0; i<6; i++){
             printf("inter %d\n", intermediario->machines[i].port);
         }
@@ -37,7 +38,7 @@ void TrataClienteTCP()
         }
     }
 
-    // chamaMenu(*intermediario);
+    chamaMenu(*intermediario);
     close(socketCliente);
 }
 

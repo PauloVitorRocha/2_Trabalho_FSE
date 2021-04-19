@@ -7,6 +7,7 @@
 #include "../inc/main.h"
 #include "../inc/menu.h"
 #include "../inc/servidor.h"
+#include "../inc/cliente.h"
 // #include "../inc/cliente.h"
 // #include "../inc/menu.h"
 pthread_t t0, t1;
@@ -24,7 +25,6 @@ void trata_interrupcao(int sinal)
 
 int main()
 {
-    flag:
     signal(SIGINT, trata_interrupcao);
     signal(SIGTSTP, abre_inputs);
     // Servidor();
@@ -57,6 +57,9 @@ void abre_inputs()
     printf("5- ARCONDICIONADO_02: %d\n", globalValues.machines[5].state);
     printf("6- Voltar a info\n");
     scanf("%d", &opcao);
+    if (opcao != 6){
+        send_TCP_message;
+    }
     if (opcao == 6){
         loopMenu();
     }

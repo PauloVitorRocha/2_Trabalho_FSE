@@ -23,7 +23,7 @@ struct servidorDistribuido
 };
 
 void trata_interrupcao_Servidor();
-void TrataClienteTCP(struct servidorDistribuido *updateValues);
-void Servidor(struct servidorDistribuido *updateValues);
+void TrataClienteTCP();
+void Servidor();
 
 #endif

@@ -12,28 +12,24 @@ unsigned int clienteLength;
 int servidorSocket;
 int socketCliente;
 
-void TrataClienteTCP(struct servidorDistribuido *values)
-{
+void TrataClienteTCP()
+{   
     int tamanhoRecebido;
-    int alarmPlaying = 0;
-    int cont = 0;
-    struct servidorDistribuido *intermediario = malloc(sizeof(struct servidorDistribuido));
-    do
-    {
-        if ((tamanhoRecebido = recv(socketCliente, (void *)intermediario, sizeof(struct servidorDistribuido), 0)) < 0)
+    char buffer[16];
+        if ((tamanhoRecebido = recv(socketCliente, buffer, 16, 0)) < 0)
         {
-            printf("Erro no recv()");
+            printf("Erro no recv()\n");
+        }
+        else{
+            printf("Comando= %c\n", buffer[0]);
         }
 
-		printf("%f %f\n",intermediario->temperatura,intermediario->umidade);
 		// for(int i=0;i<6;i++){
 		// 	printf("machines %d %d\n",intermediario->machines[i].port,intermediario->machines[i].state);
 		// }
-
-    } while (tamanhoRecebido > 0);
 }
 
-void Servidor(struct servidorDistribuido *values)
+void Servidor()
 {
 
 
@@ -42,7 +38,7 @@ void Servidor(struct servidorDistribuido *values)
     // Abrir Socket
     if ((servidorSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
     {
-        printf("falha no socket do Servidor");
+        printf("falha no socket do Servidor\n");
         close(servidorSocket);
         return;
     }
@@ -82,7 +78,7 @@ void Servidor(struct servidorDistribuido *values)
         else
         {
             printf("Connection accepted\n");
-            TrataClienteTCP(values);
+            TrataClienteTCP();
         }
         // setClientConection(inet_ntoa(clienteAddr.sin_addr));
         close(socketCliente);

@@ -22,11 +22,12 @@ pthread_mutex_t lock4 = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t lock5 = PTHREAD_MUTEX_INITIALIZER;
 
 int keepThreading = 1;
+volatile int restartClient = 1;
 float temp;
 float humidity;
 struct servidorDistribuido *update;
 pthread_t t0, t1, t2, t3, t4, t5;
-volatile int restartClient = 1;
+
 
 struct servidorDistribuido values;
 
@@ -56,6 +57,8 @@ int main()
         return 0; // problem - quit
     }
     gpioSensores();
+    // Cliente();
+
     // menu();
 
     // regulateTemperature();
@@ -69,35 +72,35 @@ int main()
     // pthread_join(t4, NULL);
 
     // pthread_create(&t5, NULL, regulateTemperature, NULL);
-    while (1)
-    {
-        Cliente();
-        sendUpdate();
-        closeSocket();
-        printf("Sleeping 1s\n");
-        sleep(1);
-    }
+
+    // while (1)
+    // {
+    //     Cliente();
+    sendUpdate();
+    //     closeSocket();
+    //     printf("Sleeping 1s\n");
+    //     sleep(1);
+    // }
 }
 
 void trataErroSocket(int signal)
 {
-    closeSocket();
-    Cliente();
-    return;
+    restartClient = 1;
 }
 
 void *connectClient()
 {
 
-    // while (keepThreading)
-    // {
-    //     // pthread_mutex_lock(&lock4);
-    //     if (restartClient)
-    //     {
-    restartClient = Cliente();
-    //     }
-    // }
-    // return NULL;
+    while (keepThreading)
+    {
+        // pthread_mutex_lock(&lock4);
+        if (restartClient)
+        {
+            restartClient = Cliente();
+        }
+        sleep(2);
+    }
+    return NULL;
 }
 
 void *gpioSensores()

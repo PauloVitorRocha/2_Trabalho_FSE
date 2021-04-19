@@ -14,19 +14,13 @@ int send_TCP_message(int nLampada)
 {
     // printf("IN TCP MSG: %f %f\n", updates->temperatura, updates->umidade);
 
-    unsigned int tamanhoMensagem;
-    tamanhoMensagem = sizeof(nLampada);
-    // printf("Tamanho da msg = %d\n", tamanhoMensagem);
+    int tamanhoMensagem = 1;
+    char comando[2];
+    comando[0] = nLampada + 48;
 
-    int t1;
-    // printf("ate aq = %d\n", t1);
-    t1 = send(clienteSocket, nLampada, tamanhoMensagem, 0);
-    // printf("t1aqdeu = %d\n", t1);
-    if (t1 != tamanhoMensagem)
+    if (send(clienteSocket, comando, 1, 0) != tamanhoMensagem)
     {
         printf("Erro no envio: numero de bytes enviados diferente do esperado\n");
-        // close(clienteSocket);
-        // free(updates);
         return 1;
     }
     else
@@ -34,7 +28,6 @@ int send_TCP_message(int nLampada)
         printf("Mensagem enviada com sucesso\n");
         // close(clienteSocket);
     }
-    // printf("ALGUMA COISA DEU MERDA\n");
     return 0;
 }
 
@@ -76,7 +69,7 @@ int Cliente()
     return 0;
 }
 
-void closeSocket()
+void closeClienteSocket()
 {
     close(clienteSocket);
 }

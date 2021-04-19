@@ -12,6 +12,6 @@
 
 int Cliente();
 void trataa_interrupcao_Cliente();
-int send_TCP_message();
+int send_TCP_message(struct servidorDistribuido *updates);
 void closeSocket();
 #endif

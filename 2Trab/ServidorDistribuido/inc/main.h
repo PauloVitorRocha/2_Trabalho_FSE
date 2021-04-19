@@ -7,7 +7,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <sys/time.h>
 #include "gpio.h"
 #include "bme280.h"
 // #include "servidor.h"
@@ -19,8 +18,8 @@ void *gpioSensores();
 void trataSinalAlarme(int sinal);
 void interruption(int sig);
 void *sendUpdate();
-void *connectClient();
 void trataErroSocket(int signal);
 void *regulateTemperature();
+void *connectClient();
 
 #endif

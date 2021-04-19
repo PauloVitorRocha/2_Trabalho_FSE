@@ -21,14 +21,6 @@ struct device
     void configura_pinos(){
 
     // Define botão como entrada
-    bcm2835_gpio_fsel(SENSOR_PRESENCA_SALA, BCM2835_GPIO_FSEL_INPT);
-    // Configura entrada do botão como Pull-up
-    bcm2835_gpio_set_pud(SENSOR_PRESENCA_SALA, BCM2835_GPIO_PUD_UP);
-
-    // bcm2835_gpio_hen(SENSOR_PRESENCA_SALA); // Evento HIGH
-    //bcm2835_gpio_len(SENSOR_PRESENCA_SALA); // Evento LOW
-    bcm2835_gpio_ren(SENSOR_PRESENCA_SALA); // Evento Rising Edge
-    // bcm2835_gpio_fen(SENSOR_PRESENCA_SALA); // Evento Falling Edge
 }
 
 

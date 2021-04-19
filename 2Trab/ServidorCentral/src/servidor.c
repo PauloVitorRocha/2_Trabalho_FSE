@@ -4,7 +4,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include "../inc/servidor.h"
-#include "../inc/menu.h"
+#include "../inc/main.h"
 
 
 struct sockaddr_in servidorAddr;
@@ -17,7 +17,6 @@ int socketCliente;
 
 void TrataClienteTCP()
 {
-    printf("Tratando Cliente TCP\n");
     int tamanhoRecebido;
     int alarmPlaying = 0;
     int cont = 0;
@@ -28,18 +27,11 @@ void TrataClienteTCP()
         printf("Erro no recv()");
     }
     else{
-        printf("Temperatura: %f\n", intermediario->temperatura);
-        printf("Umidade: %f\n", intermediario->umidade);
-        for(int i=0; i<6; i++){
-            printf("inter %d\n", intermediario->machines[i].port);
-        }
-        for(int i=0; i<8; i++){
-            printf("sensors %d\n", intermediario->sensors[i].port);
-        }
+        atualizaValor(*intermediario);
+
     }
 
-    chamaMenu(*intermediario);
-    close(socketCliente);
+    // close(socketCliente);
 }
 
 void Servidor()
@@ -84,7 +76,7 @@ void Servidor()
     while (1)
     {
         clienteLength = sizeof(clienteAddr);
-        printf("Aguardando conexão\n");
+        // printf("Aguardando conexão\n");
         if ((socketCliente = accept(servidorSocket, (struct sockaddr *)&clienteAddr, &clienteLength)) < 0)
         {
             printf("Falha no Accept\n");
@@ -92,7 +84,6 @@ void Servidor()
         }
         else
         {
-            printf("aqui estou\n");
             TrataClienteTCP();
         }
         close(socketCliente);
@@ -100,5 +91,6 @@ void Servidor()
     close(servidorSocket);
 }
 void closeSocket(){
+    close(socketCliente);
     close(servidorSocket);
 }

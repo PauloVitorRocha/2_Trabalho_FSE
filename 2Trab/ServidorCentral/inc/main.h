@@ -6,9 +6,15 @@
 
 // #include "cliente.h"
 #include "servidor.h"
+#include <ncurses.h>
 
-void *connectClient();
+void *ligaServidor();
+void chamaMenu();
+void loopMenu();
+void *pegaInput();
+void atualizaValor(struct servidorCentral intermediario);
 void trataSinalAlarme();
+void abre_inputs();
 void trataInterrupcao(int sig);
 void trataErroSocket(int signal);
 

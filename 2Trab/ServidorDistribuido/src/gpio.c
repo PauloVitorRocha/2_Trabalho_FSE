@@ -312,7 +312,6 @@ struct servidorDistribuido *setInitialValues()
     bme280ReadValues(&T, &P, &H);
     newValues->temperatura = T/100.0;
     newValues->umidade = H/1000.0;
-    printf("newvaluestemp = %f\n", newValues->temperatura);
 
     for (int i = 0; i < 6; i++)
     {

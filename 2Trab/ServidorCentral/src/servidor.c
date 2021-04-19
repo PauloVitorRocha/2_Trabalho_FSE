@@ -4,6 +4,9 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include "../inc/servidor.h"
+#include "../inc/menu.h"
+
+
 struct sockaddr_in servidorAddr;
 struct sockaddr_in clienteAddr;
 unsigned short servidorPorta;
@@ -24,16 +27,17 @@ void TrataClienteTCP()
     {
         printf("Erro no recv()");
     }
+    else{
+        printf("accepted msg\n");
+        for(int i=0; i<6; i++){
+            printf("inter %d\n", intermediario->machines[i].port);
+        }
+        for(int i=0; i<8; i++){
+            printf("sensors %d\n", intermediario->sensors[i].port);
+        }
+    }
 
-    printf("%f %f\n", intermediario->temperatura, intermediario->umidade);
-    for (int i = 0; i < 6; i++)
-    {
-        printf("machines %d %d\n", intermediario->machines[i].port, intermediario->machines[i].state);
-    }
-    for (int i = 0; i < 8; i++)
-    {
-        printf("sensors %d %d\n", intermediario->sensors[i].port, intermediario->sensors[i].state);
-    }
+    // chamaMenu(*intermediario);
     close(socketCliente);
 }
 
@@ -92,5 +96,8 @@ void Servidor()
         }
         close(socketCliente);
     }
+    close(servidorSocket);
+}
+void closeSocket(){
     close(servidorSocket);
 }

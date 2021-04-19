@@ -2,6 +2,6 @@
 #define MENU_H_
 
 
-void menu();
+void chamaMenu();
 
 #endif /* MENU_H_ */

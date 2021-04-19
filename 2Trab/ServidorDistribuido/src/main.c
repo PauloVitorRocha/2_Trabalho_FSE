@@ -10,7 +10,6 @@
 #include "../inc/gpio.h"
 #include "../inc/servidor.h"
 #include "../inc/cliente.h"
-#include "../inc/menu.h"
 
 // Define some device parameters
 #define I2C_ADDR 0x76 // I2C device address
@@ -41,8 +40,8 @@ int main()
     Cliente();
     i2c_TemperaturaUmidade();
     gpioSensores();
-    menu();
-    // sendUpdate();
+    // menu();
+    sendUpdate();
 
     // regulateTemperature();
     // pthread_create(&t1, NULL, gpioSensores, NULL);
@@ -80,10 +79,11 @@ void *i2c_TemperaturaUmidade()
 
 void *sendUpdate()
 {
-    *update = *setInitialValues();
-    printf("temp = %f\n", update->temperatura);
-        update->temperatura = temp;
-    update->umidade = humidity;
+    struct servidorDistribuido *values = malloc(sizeof(struct servidorDistribuido));
+    values = setInitialValues();
+    printf("temp = %f\n", values->temperatura);
+    values->temperatura = temp;
+    values->umidade = humidity;
     // sleep(1);
-    send_TCP_message(update);
+    send_TCP_message(values);
 }

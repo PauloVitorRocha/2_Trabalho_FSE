@@ -23,5 +23,7 @@ struct servidorCentral
 };
 
 void Servidor();
+void closeSocket();
+void TrataClienteTCP();
 
 #endif

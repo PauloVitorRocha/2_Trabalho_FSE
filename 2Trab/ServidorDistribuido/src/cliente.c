@@ -16,8 +16,8 @@ int send_TCP_message(struct servidorDistribuido *updates)
 
     unsigned int tamanhoMensagem;
     tamanhoMensagem = sizeof(struct servidorDistribuido);
-    // printf("Tamanho da msg = %d\n", tamanhoMensagem);
-    // printf("Tamanho de updates = %d\n", sizeof(updates));
+    printf("Tamanho da msg = %d\n", tamanhoMensagem);
+    printf("Tamanho de updates = %d\n", sizeof(updates));
 
     int t1;
     if (t1 = send(clienteSocket, updates, tamanhoMensagem, 0), t1 != tamanhoMensagem)

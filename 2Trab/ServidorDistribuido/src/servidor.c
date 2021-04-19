@@ -18,7 +18,6 @@ void TrataClienteTCP(struct servidorDistribuido *values)
     int alarmPlaying = 0;
     int cont = 0;
     struct servidorDistribuido *intermediario = malloc(sizeof(struct servidorDistribuido));
-    
     do
     {
         if ((tamanhoRecebido = recv(socketCliente, (void *)intermediario, sizeof(struct servidorDistribuido), 0)) < 0)

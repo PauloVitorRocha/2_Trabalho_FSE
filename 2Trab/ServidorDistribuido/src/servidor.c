@@ -24,7 +24,7 @@ void TrataClienteTCP()
         }
         else
         {
-            printf("Comando= %c\n", buffer[0]);
+            printf("Comando recebido= %c\n", buffer[0]);
         }
 
         gpioLigaEquipamentos(atoi(buffer));
@@ -36,7 +36,7 @@ void Servidor()
 {
 
     // Porta Servidor Distribuido
-    servidorPorta = 10024;
+    servidorPorta = 10124;
     // Abrir Socket
     if ((servidorSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
     {
@@ -69,7 +69,7 @@ void Servidor()
 
     while (1)
     {
-        printf("Waiting for incoming connections...\n");
+        // printf("Waiting for incoming connections...\n");
         clienteLength = sizeof(clienteAddr);
         if ((socketCliente = accept(servidorSocket, (struct sockaddr *)&clienteAddr, &clienteLength)) < 0)
         {

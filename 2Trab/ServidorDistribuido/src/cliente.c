@@ -12,31 +12,20 @@ int clienteSocket;
 
 int send_TCP_message(struct servidorDistribuido *updates)
 {
-    // printf("IN TCP MSG: %f %f\n", updates->temperatura, updates->umidade);
-
     unsigned int tamanhoMensagem;
     tamanhoMensagem = sizeof(struct servidorDistribuido);
-    // printf("Tamanho da msg = %d\n", tamanhoMensagem);
 
     int t1;
-    printf("mensagem temp = %f\n", updates->temperatura);
-    printf("tamanho msg = %u\n", tamanhoMensagem);
-    printf("cliente socket = %d\n", clienteSocket);
     t1 = send(clienteSocket, updates, tamanhoMensagem, 0);
-    // printf("t1aqdeu = %d\n", t1);
     if( t1 != tamanhoMensagem)
     {
         printf("Erro no envio: numero de bytes enviados diferente do esperado\n");
-        // close(clienteSocket);
-        // free(updates);
         return 1;
     }
     else{
-        printf("Mensagem enviada com sucesso\n");
+        // printf("Mensagem enviada com sucesso\n");
         free(updates);
-        // close(clienteSocket);
     }
-    // printf("ALGUMA COISA DEU MERDA\n");
     return 0;
 }
 
@@ -73,7 +62,6 @@ int Cliente()
     {
         printf("Sucessfully conected with server\n");
     }
-    // close(clienteSocket);
 
     return 0;
 }

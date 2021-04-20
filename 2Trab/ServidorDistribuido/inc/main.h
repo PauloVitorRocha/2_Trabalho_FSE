@@ -12,14 +12,9 @@
 // #include "servidor.h"
 #include "cliente.h"
 
-void *gpioLampadasArCondicionado();
-void *i2c_TemperaturaUmidade();
-void *gpioSensores();
-void trataSinalAlarme(int sinal);
-void interruption(int sig);
+void trata_interrupcao(int sinal);
 void *sendUpdate();
 void trataErroSocket(int signal);
-void *regulateTemperature();
 void *connectClient();
 void *connectServer();
 

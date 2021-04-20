@@ -32,6 +32,33 @@ pthread_t t0, t1, t2, t3, t4, t5;
 
 struct servidorDistribuido values;
 
+
+int main()
+{
+    signal(SIGINT, trata_interrupcao);
+    signal(SIGPIPE, trataErroSocket);
+
+    int i = bme280Init(1, 0x76);
+    if (i != 0)
+    {
+        printf("Error bmeInit\n");
+        return 0; // problem - quit
+    }
+    gpio_init();
+
+    pthread_create(&t2, NULL, connectServer, NULL);
+    pthread_create(&t3, NULL, connectClient, NULL);
+
+    while (keepThreading)
+    {
+        if (!restartClient)
+        {
+            sendUpdate();
+        }
+        usleep(1000000);
+    }
+}
+
 void trata_interrupcao(int sinal)
 {
     // bcm2835_close();
@@ -40,48 +67,6 @@ void trata_interrupcao(int sinal)
     closeSocket();
     printf("\nEncerrando\n");
     exit(0);
-}
-
-int main()
-{
-    // init_bcm();
-    // gpio_init();
-    signal(SIGINT, trata_interrupcao);
-    signal(SIGPIPE, trataErroSocket);
-
-    // Servidor(&values);
-    // Cliente();
-    int i = bme280Init(1, 0x76);
-    if (i != 0)
-    {
-        printf("Error bmeInit\n");
-        // return 0; // problem - quit
-    }
-    gpioSensores();
-    // Cliente();
-
-    // menu();
-
-    // regulateTemperature();
-    // pthread_create(&t1, NULL, gpioSensores, NULL);
-    // pthread_join(t1, NULL);
-    // pthread_create(&t2, NULL, i2c_TemperaturaUmidade, NULL);
-    pthread_create(&t3, NULL, connectClient, NULL);
-    pthread_create(&t2, NULL, connectServer, NULL);
-    // pthread_join(t2, NULL);
-    // pthread_join(t3, NULL);
-    // pthread_create(&t4, NULL, sendUpdate, NULL);
-    // pthread_join(t4, NULL);
-
-    // pthread_create(&t5, NULL, regulateTemperature, NULL);
-
-    while (1)
-    {
-        if(!restartClient){
-            sendUpdate();
-        }
-        usleep(1000000);
-    }
 }
 
 void trataErroSocket(int signal)
@@ -105,17 +90,11 @@ void *connectClient()
 }
 void *connectServer()
 {
-
     while (keepThreading)
     {
         Servidor();
         usleep(2000000);
     }
-}
-
-void *gpioSensores()
-{
-    gpio_init();
 }
 
 void *sendUpdate()

@@ -1,2 +1,2 @@
 all:
-	    gcc main.c servidor.c menu.c cliente.c -lwiringPi -lncurses -lpthread
+	    gcc main.c servidor.c cliente.c -lwiringPi -lncurses -lpthread

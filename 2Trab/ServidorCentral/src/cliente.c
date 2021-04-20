@@ -25,7 +25,7 @@ int send_TCP_message(int nLampada)
     }
     else
     {
-        printf("Mensagem enviada com sucesso\n");
+        // printf("Mensagem enviada com sucesso\n");
         // close(clienteSocket);
     }
     return 0;
@@ -44,7 +44,7 @@ int Cliente()
     // Criar Socket
     if ((clienteSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
     {
-        printf("Erro no socket()");
+        printf("Erro no socket()\n");
         return 1;
     }
 
@@ -57,7 +57,7 @@ int Cliente()
     // Connect
     if (connect(clienteSocket, (struct sockaddr *)&servidorAddr, sizeof(servidorAddr)) < 0)
     {
-        printf("Cliente Central não conseguiu conectar com o Servidor Distribuido");
+        printf("Cliente Central não conseguiu conectar com o Servidor Distribuido\n");
         return 1;
     }
     else

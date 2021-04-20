@@ -13,11 +13,11 @@
 pthread_t t0, t1;
 
 int keepThreading = 1;
-int menuAberto =0;
 struct servidorCentral *values;
 struct servidorCentral globalValues;
 volatile int statusServer = 0;
 volatile int restartServer = 1;
+volatile int menuAberto = 0;
 pthread_mutex_t lockInput = PTHREAD_MUTEX_INITIALIZER;
 void trata_interrupcao(int sinal)
 {
@@ -46,40 +46,40 @@ void loopMenu()
     while (1)
     {
         chamaMenu();
-        sleep(1);
+        usleep(1000000);
     }
 }
 void abre_inputs()
 {
-    menuAberto=1;
+    menuAberto = 1;
     chamaMenu();
     pthread_mutex_unlock(&lockInput);
 }
 
 void *pegaInput()
 {
-    while (keepThreading)
+    pthread_mutex_lock(&lockInput);
+    int opcao;
+    do
     {
-        pthread_mutex_lock(&lockInput);
-        int opcao;
-        
         scanf("%d", &opcao);
         if (opcao != 6)
         {
             send_TCP_message(opcao);
+            menuAberto = 0;
         }
         if (opcao == 6)
         {
-            menuAberto=0;
+            menuAberto = 0;
             loopMenu();
         }
-    }
+    } while (keepThreading);
 }
 
 void chamaMenu()
 {
 
-    printf("\033[2J\033[H");
+    system("clear");
     printf("------- Bem vindo ao trabalho 2 -------\n");
 
     printf("Status do Distribuido: %d\n", statusServer);
@@ -100,7 +100,8 @@ void chamaMenu()
     printf("SENSOR_ABERTURA_JANELA_QUARTO_01: %d\n", globalValues.sensors[6].state);
     printf("SENSOR_ABERTURA_JANELA_QUARTO_02: %d\n", globalValues.sensors[7].state);
     printf("\nPressione CTRL+Z para menu \n");
-    if(menuAberto){
+    if (menuAberto)
+    {
         printf("Qual opção deseja mudar?\n");
         printf("0- LAMPADA_01: %d\n", globalValues.machines[0].state);
         printf("1- LAMPADA_02: %d\n", globalValues.machines[1].state);

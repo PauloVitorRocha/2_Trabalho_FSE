@@ -23,11 +23,12 @@ pthread_mutex_t lock5 = PTHREAD_MUTEX_INITIALIZER;
 
 int keepThreading = 1;
 volatile int restartClient = 1;
+volatile int statusServer = 1;
+volatile int restartServer = 1;
 float temp;
 float humidity;
 struct servidorDistribuido *update;
 pthread_t t0, t1, t2, t3, t4, t5;
-
 
 struct servidorDistribuido values;
 
@@ -54,7 +55,7 @@ int main()
     if (i != 0)
     {
         printf("Error bmeInit\n");
-        return 0; // problem - quit
+        // return 0; // problem - quit
     }
     gpioSensores();
     // Cliente();
@@ -65,26 +66,27 @@ int main()
     // pthread_create(&t1, NULL, gpioSensores, NULL);
     // pthread_join(t1, NULL);
     // pthread_create(&t2, NULL, i2c_TemperaturaUmidade, NULL);
+    pthread_create(&t3, NULL, connectClient, NULL);
+    pthread_create(&t2, NULL, connectServer, NULL);
     // pthread_join(t2, NULL);
-    // pthread_create(&t3, NULL, connectClient, NULL);
     // pthread_join(t3, NULL);
     // pthread_create(&t4, NULL, sendUpdate, NULL);
     // pthread_join(t4, NULL);
 
     // pthread_create(&t5, NULL, regulateTemperature, NULL);
 
-    // while (1)
-    // {
-    //     Cliente();
-    sendUpdate();
-    //     closeSocket();
-    //     printf("Sleeping 1s\n");
-    //     sleep(1);
-    // }
+    while (1)
+    {
+        if(!restartClient){
+            sendUpdate();
+        }
+        usleep(1000000);
+    }
 }
 
 void trataErroSocket(int signal)
 {
+    printf("Sigpipe error\n");
     restartClient = 1;
 }
 
@@ -93,14 +95,22 @@ void *connectClient()
 
     while (keepThreading)
     {
-        // pthread_mutex_lock(&lock4);
         if (restartClient)
         {
             restartClient = Cliente();
         }
-        sleep(2);
+        usleep(1000000);
     }
     return NULL;
+}
+void *connectServer()
+{
+
+    while (keepThreading)
+    {
+        Servidor();
+        usleep(2000000);
+    }
 }
 
 void *gpioSensores()

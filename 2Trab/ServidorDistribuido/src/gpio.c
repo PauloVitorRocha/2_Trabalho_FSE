@@ -307,19 +307,24 @@ struct servidorDistribuido *setInitialValues()
 {
     struct servidorDistribuido *newValues = malloc(sizeof(struct servidorDistribuido));
 
-    int T, P, H;
+    int T=0, P, H=0;
     // bme280Start(I2C_CH, I2C_ADDR, &T, &P, &H);
     bme280ReadValues(&T, &P, &H);
     newValues->temperatura = T/100.0;
     newValues->umidade = H/1000.0;
 
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < machinesSize; i++)
+    {
+        machines[i].state = digitalRead(machines[i].port);
+    }
+
+    for (int i = 0; i < machinesSize; i++)
     {
         newValues->machines[i].state = machines[i].state;
         newValues->machines[i].port = machines[i].port;
     }
 
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < sensorsSize; i++)
     {
         newValues->sensors[i].state = sensors[i].state;
         newValues->sensors[i].port = sensors[i].port;

@@ -21,5 +21,6 @@ void *sendUpdate();
 void trataErroSocket(int signal);
 void *regulateTemperature();
 void *connectClient();
+void *connectServer();
 
 #endif

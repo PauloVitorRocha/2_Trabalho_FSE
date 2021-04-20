@@ -19,7 +19,9 @@ int send_TCP_message(struct servidorDistribuido *updates)
     // printf("Tamanho da msg = %d\n", tamanhoMensagem);
 
     int t1;
-    // printf("ate aq = %d\n", t1);
+    printf("mensagem temp = %f\n", updates->temperatura);
+    printf("tamanho msg = %u\n", tamanhoMensagem);
+    printf("cliente socket = %d\n", clienteSocket);
     t1 = send(clienteSocket, updates, tamanhoMensagem, 0);
     // printf("t1aqdeu = %d\n", t1);
     if( t1 != tamanhoMensagem)
@@ -45,7 +47,7 @@ int Cliente()
     char *IP_Servidor;
 
     // Ip servidor distribuido, porta servidor distribuido
-    IP_Servidor = "192.168.0.9";
+    IP_Servidor = "192.168.0.53";
     servidorPorta = 10024;
 
     // Criar Socket
@@ -64,7 +66,7 @@ int Cliente()
     // Connect
     if (connect(clienteSocket, (struct sockaddr *)&servidorAddr, sizeof(servidorAddr)) < 0)
     {
-        printf("Cliente Central não conseguiu conectar com o Servidor Distribuido");
+        printf("Cliente Distribuido não conseguiu conectar com o Servidor Central\n");
         return 1;
     }
     else

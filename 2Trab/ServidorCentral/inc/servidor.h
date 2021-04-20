@@ -22,6 +22,10 @@ struct servidorCentral
     struct device sensors[10];
 };
 
+extern volatile int restartServer;
+extern volatile int statusServer;
+extern volatile int restartClient;
+
 void Servidor();
 void closeSocket();
 void TrataClienteTCP();

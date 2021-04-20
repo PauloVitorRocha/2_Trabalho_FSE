@@ -12,9 +12,13 @@
 // #include "../inc/menu.h"
 pthread_t t0, t1;
 
-int contador = 0, keepThreading = 1;
+int keepThreading = 1;
+int menuAberto =0;
 struct servidorCentral *values;
 struct servidorCentral globalValues;
+volatile int statusServer = 0;
+volatile int restartServer = 1;
+pthread_mutex_t lockInput = PTHREAD_MUTEX_INITIALIZER;
 void trata_interrupcao(int sinal)
 {
     // bcm2835_close();
@@ -30,7 +34,9 @@ int main()
     // Servidor();
     // pthread_create(&t1, NULL, *pegaInput, NULL);
     pthread_create(&t0, NULL, *ligaServidor, NULL);
-    // pthread_join(t1, NULL);
+    pthread_mutex_lock(&lockInput);
+    pthread_create(&t1, NULL, *pegaInput, NULL);
+    // pthread_join(t0, NULL);
     loopMenu();
     return 0;
 }
@@ -40,28 +46,33 @@ void loopMenu()
     while (1)
     {
         chamaMenu();
-        sleep(5);
+        sleep(1);
     }
 }
 void abre_inputs()
 {
-    int opcao;
-    printf("\033[2J\033[H");
+    menuAberto=1;
     chamaMenu();
-    printf("Qual opção deseja mudar?\n");
-    printf("0- LAMPADA_01: %d\n", globalValues.machines[0].state);
-    printf("1- LAMPADA_02: %d\n", globalValues.machines[1].state);
-    printf("2- LAMPADA_03: %d\n", globalValues.machines[2].state);
-    printf("3- LAMPADA_04: %d\n", globalValues.machines[3].state);
-    printf("4- ARCONDICIONADO_01: %d\n", globalValues.machines[4].state);
-    printf("5- ARCONDICIONADO_02: %d\n", globalValues.machines[5].state);
-    printf("6- Voltar a info\n");
-    scanf("%d", &opcao);
-    if (opcao != 6){
-        send_TCP_message;
-    }
-    if (opcao == 6){
-        loopMenu();
+    pthread_mutex_unlock(&lockInput);
+}
+
+void *pegaInput()
+{
+    while (keepThreading)
+    {
+        pthread_mutex_lock(&lockInput);
+        int opcao;
+        
+        scanf("%d", &opcao);
+        if (opcao != 6)
+        {
+            send_TCP_message(opcao);
+        }
+        if (opcao == 6)
+        {
+            menuAberto=0;
+            loopMenu();
+        }
     }
 }
 
@@ -70,6 +81,8 @@ void chamaMenu()
 
     printf("\033[2J\033[H");
     printf("------- Bem vindo ao trabalho 2 -------\n");
+
+    printf("Status do Distribuido: %d\n", statusServer);
     printf("Temperatura: %f\n", globalValues.temperatura);
     printf("Umidade: %f\n", globalValues.umidade);
     printf("LAMPADA_01: %d\n", globalValues.machines[0].state);
@@ -87,14 +100,21 @@ void chamaMenu()
     printf("SENSOR_ABERTURA_JANELA_QUARTO_01: %d\n", globalValues.sensors[6].state);
     printf("SENSOR_ABERTURA_JANELA_QUARTO_02: %d\n", globalValues.sensors[7].state);
     printf("\nPressione CTRL+Z para menu \n");
+    if(menuAberto){
+        printf("Qual opção deseja mudar?\n");
+        printf("0- LAMPADA_01: %d\n", globalValues.machines[0].state);
+        printf("1- LAMPADA_02: %d\n", globalValues.machines[1].state);
+        printf("2- LAMPADA_03: %d\n", globalValues.machines[2].state);
+        printf("3- LAMPADA_04: %d\n", globalValues.machines[3].state);
+        printf("4- ARCONDICIONADO_01: %d\n", globalValues.machines[4].state);
+        printf("5- ARCONDICIONADO_02: %d\n", globalValues.machines[5].state);
+        printf("6- Voltar a info\n");
+    }
 }
 
 void atualizaValor(struct servidorCentral intermediario)
 {
-    // struct servidorCentral *values = malloc(sizeof(struct servidorCentral));
-    // printf("Atualizando Valores\n");
     globalValues.temperatura = intermediario.temperatura;
-    // printf("globalValues temp = %f\n", globalValues.temperatura);
     globalValues.umidade = intermediario.umidade;
     for (int i = 0; i < 6; i++)
     {
@@ -111,5 +131,9 @@ void atualizaValor(struct servidorCentral intermediario)
 
 void *ligaServidor()
 {
-    Servidor();
+    while (keepThreading)
+    {
+        Servidor();
+        usleep(2000000);
+    }
 }

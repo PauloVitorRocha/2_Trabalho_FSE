@@ -8,6 +8,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/time.h>
+#include "gpio.h"
 
 struct device
 {
@@ -21,6 +22,9 @@ struct servidorDistribuido
     struct device machines[10];
     struct device sensors[10];
 };
+
+extern volatile int restartServer;
+extern volatile int restartClient;
 
 void trata_interrupcao_Servidor();
 void TrataClienteTCP();

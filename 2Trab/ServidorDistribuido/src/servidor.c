@@ -13,25 +13,27 @@ int servidorSocket;
 int socketCliente;
 
 void TrataClienteTCP()
-{   
+{
     int tamanhoRecebido;
     char buffer[16];
+    do
+    {
         if ((tamanhoRecebido = recv(socketCliente, buffer, 16, 0)) < 0)
         {
             printf("Erro no recv()\n");
         }
-        else{
+        else
+        {
             printf("Comando= %c\n", buffer[0]);
         }
 
-		// for(int i=0;i<6;i++){
-		// 	printf("machines %d %d\n",intermediario->machines[i].port,intermediario->machines[i].state);
-		// }
+        gpioLigaEquipamentos(atoi(buffer));
+
+    } while (tamanhoRecebido > 0);
 }
 
 void Servidor()
 {
-
 
     // Porta Servidor Distribuido
     servidorPorta = 10024;
@@ -80,7 +82,6 @@ void Servidor()
             printf("Connection accepted\n");
             TrataClienteTCP();
         }
-        // setClientConection(inet_ntoa(clienteAddr.sin_addr));
         close(socketCliente);
     }
     close(servidorSocket);

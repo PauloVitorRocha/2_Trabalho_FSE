@@ -34,8 +34,6 @@ int init_bcm();
 void checaSensoresGPIO();
 void trata_interrupcao_gpio(void);
 
-extern volatile int restartClient;
-
 struct servidorDistribuido *setInitialValues();
 
 #endif /* GPIO_H_ */

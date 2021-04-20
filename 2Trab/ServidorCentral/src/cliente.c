@@ -38,7 +38,7 @@ int Cliente()
     char *IP_Servidor;
 
     // Ip servidor distribuido, porta servidor distribuido
-    IP_Servidor = "192.168.0.4";
+    IP_Servidor = "192.168.0.52";
     servidorPorta = 10124;
 
     // Criar Socket

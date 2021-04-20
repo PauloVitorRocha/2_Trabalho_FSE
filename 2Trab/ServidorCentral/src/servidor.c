@@ -6,7 +6,6 @@
 #include "../inc/servidor.h"
 #include "../inc/main.h"
 
-
 struct sockaddr_in servidorAddr;
 struct sockaddr_in clienteAddr;
 unsigned short servidorPorta;
@@ -21,15 +20,18 @@ void TrataClienteTCP()
     int alarmPlaying = 0;
     int cont = 0;
     struct servidorCentral *intermediario = malloc(sizeof(struct servidorCentral));
-
-    if ((tamanhoRecebido = recv(socketCliente, (void *)intermediario, sizeof(struct servidorCentral), 0)) < 0)
+    do
     {
-        printf("Erro no recv()");
-    }
-    else{
-        atualizaValor(*intermediario);
+        if ((tamanhoRecebido = recv(socketCliente, (void *)intermediario, sizeof(struct servidorCentral), 0)) < 0)
+        {
+            printf("Erro no recv()\n");
+        }
+        else
+        {
+            atualizaValor(*intermediario);
+        }
 
-    }
+    } while (tamanhoRecebido > 0);
 
     // close(socketCliente);
 }
@@ -46,7 +48,7 @@ void Servidor()
     // Abrir Socket
     if ((servidorSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
     {
-        printf("falha no socket do Servidor");
+        printf("falha no socket do Servidor\n");
         close(servidorSocket);
         return;
     }
@@ -60,7 +62,7 @@ void Servidor()
     // Bind
     if (bind(servidorSocket, (struct sockaddr *)&servidorAddr, sizeof(servidorAddr)) < 0)
     {
-        printf("Falha no Bind do Servidor Central");
+        printf("Falha no Bind do Servidor Central\n");
         close(servidorSocket);
         return;
     }
@@ -76,7 +78,7 @@ void Servidor()
     while (1)
     {
         clienteLength = sizeof(clienteAddr);
-        // printf("Aguardando conexão\n");
+        printf("Aguardando conexão\n");
         if ((socketCliente = accept(servidorSocket, (struct sockaddr *)&clienteAddr, &clienteLength)) < 0)
         {
             printf("Falha no Accept\n");
@@ -84,13 +86,17 @@ void Servidor()
         }
         else
         {
+            printf("Conectado com sucesso\n");
+            statusServer=1;
             TrataClienteTCP();
         }
+        statusServer=0;
         close(socketCliente);
     }
     close(servidorSocket);
 }
-void closeSocket(){
+void closeSocket()
+{
     close(socketCliente);
     close(servidorSocket);
 }

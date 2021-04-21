@@ -11,6 +11,6 @@
 
 
 int Cliente();
-int sen_TCP_message();
+int send_TCP_message();
 void closeSocket();
 #endif

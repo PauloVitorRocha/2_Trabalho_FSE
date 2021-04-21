@@ -23,7 +23,6 @@ int send_TCP_message(struct servidorDistribuido *updates)
         return 1;
     }
     else{
-        // printf("Mensagem enviada com sucesso\n");
         free(updates);
     }
     return 0;
@@ -37,7 +36,7 @@ int Cliente()
 
     // Ip servidor distribuido, porta servidor distribuido
     IP_Servidor = "192.168.0.53";
-    servidorPorta = 10024;
+    servidorPorta = 10033;
 
     // Criar Socket
     if ((clienteSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)

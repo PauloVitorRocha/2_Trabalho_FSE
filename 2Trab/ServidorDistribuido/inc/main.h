@@ -9,7 +9,6 @@
 #include <stdio.h>
 #include "gpio.h"
 #include "bme280.h"
-// #include "servidor.h"
 #include "cliente.h"
 
 void trata_interrupcao(int sinal);

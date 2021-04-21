@@ -12,9 +12,10 @@ int clienteSocket;
 
 int send_TCP_message(int nLampada)
 {
-    // printf("IN TCP MSG: %f %f\n", updates->temperatura, updates->umidade);
-
     int tamanhoMensagem = 1;
+    if(nLampada>7 || nLampada<0){
+        return 1;
+    }
     char comando[2];
     comando[0] = nLampada + 48;
 
@@ -22,11 +23,6 @@ int send_TCP_message(int nLampada)
     {
         printf("Erro no envio: numero de bytes enviados diferente do esperado\n");
         return 1;
-    }
-    else
-    {
-        // printf("Mensagem enviada com sucesso\n");
-        // close(clienteSocket);
     }
     return 0;
 }
@@ -39,7 +35,7 @@ int Cliente()
 
     // Ip servidor distribuido, porta servidor distribuido
     IP_Servidor = "192.168.0.52";
-    servidorPorta = 10124;
+    servidorPorta = 10133;
 
     // Criar Socket
     if ((clienteSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
@@ -64,7 +60,6 @@ int Cliente()
     {
         printf("Sucessfully conected with server\n");
     }
-    // close(clienteSocket);
 
     return 0;
 }

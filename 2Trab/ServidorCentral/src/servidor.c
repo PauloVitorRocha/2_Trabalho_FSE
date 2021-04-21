@@ -33,7 +33,6 @@ void TrataClienteTCP()
 
     } while (tamanhoRecebido > 0);
 
-    // close(socketCliente);
 }
 
 void Servidor()
@@ -44,7 +43,7 @@ void Servidor()
     unsigned int clienteLength;
 
     // Porta Servidor Distribuido
-    servidorPorta = 10024;
+    servidorPorta = 10033;
     // Abrir Socket
     if ((servidorSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
     {

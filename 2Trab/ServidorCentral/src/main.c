@@ -7,9 +7,9 @@
 #include "../inc/main.h"
 #include "../inc/servidor.h"
 #include "../inc/cliente.h"
-// #include "../inc/cliente.h"
-// #include "../inc/menu.h"
-pthread_t t0, t1, t2;
+
+
+pthread_t t0, t1, t2, t3;
 
 int keepThreading = 1;
 struct servidorCentral *values;
@@ -18,6 +18,7 @@ volatile int statusServer = 0;
 volatile int restartServer = 1;
 volatile int restartClient = 1;
 volatile int menuAberto = 0;
+int alarmeTocando = 0, alarmeLigado = 0;
 pthread_mutex_t lockInput = PTHREAD_MUTEX_INITIALIZER;
 
 int main()
@@ -27,6 +28,7 @@ int main()
     pthread_create(&t0, NULL, *ligaServidor, NULL);
     pthread_create(&t2, NULL, *ligaCliente, NULL);
     pthread_create(&t1, NULL, *pegaInput, NULL);
+    pthread_create(&t3, NULL, *verificaSensores, NULL);
     loopMenu();
     return 0;
 }
@@ -49,7 +51,7 @@ void loopMenu()
     while (1)
     {
         chamaMenu();
-        usleep(1000000);
+        usleep(5000000);
     }
 }
 
@@ -59,15 +61,19 @@ void *pegaInput()
     do
     {
         scanf("%d", &opcao);
-        if (opcao != 6)
+        if (opcao != 6 && opcao != 7)
         {
             send_TCP_message(opcao);
             menuAberto = 0;
         }
-        if (opcao == 6)
+        else if (opcao == 7)
         {
             menuAberto = 0;
             loopMenu();
+        }
+        else if (opcao == 6)
+        {
+            setAlarme();
         }
     } while (keepThreading);
 }
@@ -79,6 +85,7 @@ void chamaMenu()
     printf("------- Bem vindo ao trabalho 2 -------\n");
 
     printf("Status do Distribuido: %d\n", statusServer);
+    printf("Status do Alarme: %d\n\n", alarmeLigado);
     printf("Temperatura: %f\n", globalValues.temperatura);
     printf("Umidade: %f\n", globalValues.umidade);
     printf("LAMPADA_01: %d\n", globalValues.machines[0].state);
@@ -105,7 +112,8 @@ void chamaMenu()
         printf("3- LAMPADA_04\n");
         printf("4- ARCONDICIONADO_01\n");
         printf("5- ARCONDICIONADO_02\n");
-        printf("6- Voltar a info\n");
+        printf("6- Ativar o Alarme: %d\n", alarmeLigado);
+        printf("7- Voltar a info\n");
     }
 }
 
@@ -146,4 +154,30 @@ void *ligaCliente()
         usleep(1000000);
     }
     return NULL;
+}
+
+void *verificaSensores()
+{
+    while (keepThreading)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            if (globalValues.sensors[i].state && alarmeLigado)
+            {
+                tocaAlarme();
+            }
+        }
+        sleep(1);
+    }
+    return NULL;
+}
+
+void setAlarme()
+{
+    alarmeLigado = !alarmeLigado;
+}
+
+void tocaAlarme()
+{
+    system("omxplayer --no-keys beep.mp3 > /dev/null 2>&1 &");
 }

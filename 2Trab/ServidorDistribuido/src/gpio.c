@@ -269,38 +269,10 @@ void toggle()
     wiringPiISR(sensors[6].port, INT_EDGE_BOTH, &handleJANELA_QUARTO_01);
     wiringPiISR(sensors[7].port, INT_EDGE_BOTH, &handleJANELA_QUARTO_02);
 
-    // while (1)
-    // {
-    //     sleep(1);
-    // }
-}
-
 int gpioLigaEquipamentos(int option)
 {
     digitalWrite(machines[option].port, !machines[option].state);
     machines[option].state = !machines[option].state;
-    // updateValues
-}
-
-// int init_bcm()
-// {
-//     if (!bcm2835_init())
-//     {
-//         return 1;
-//     }
-//     return 0;
-// }
-
-void checaSensoresGPIO()
-{
-    printf("Here\n");
-    // struct servidorDistribuido *newValues = malloc(sizeof(struct servidorDistribuido));
-    // newValues->temperatura = 1000.0;
-    // newValues->umidade = 50.0;
-    // printf("%f\n", newValues->temperatura);
-    // printf("%f\n", newValues->umidade);
-
-    // send_TCP_message(newValues);
 }
 
 struct servidorDistribuido *setInitialValues()

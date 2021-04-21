@@ -3,10 +3,19 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <time.h>
 #include <unistd.h>
 #include "../inc/cliente.h"
 
 //Create a Socket for server communication
+FILE *ptr1;
+char x[64];
+void time_gen()
+{
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    strftime(x, sizeof(x), "%c", tm);
+}
 
 int clienteSocket;
 
@@ -24,6 +33,21 @@ int send_TCP_message(int nLampada)
         // printf("Erro no envio: numero de bytes enviados diferente do esperado\n");
         return 1;
     }
+    else{
+        ptr1 = fopen("comandosUsuario.csv", "a");
+        if (ptr1 == NULL)
+        {
+            printf("Error ao abrir arquivo!");
+            exit(1);
+        }
+        time_gen();
+        if (nLampada <= 3 && nLampada>=0)
+            fprintf(ptr1, "%s, Enviado comando para trocar o estado da lampada %d\n", x, nLampada + 1);
+        else
+            fprintf(ptr1, "%s, Enviado comando para trocar o estado do ar-condicionado %d\n", x, nLampada-3);
+        fclose(ptr1);
+    }
+
     return 0;
 }
 

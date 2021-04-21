@@ -12,9 +12,8 @@ void loopMenu();
 void *pegaInput();
 void *verificaSensores();
 void atualizaValor(struct servidorCentral intermediario);
-void abre_inputs();
 void setAlarme();
-void tocaAlarme();
+void tocaAlarme(int nSensor);
 void trata_interrupcao(int sig);
 void trataErroSocket(int signal);
 

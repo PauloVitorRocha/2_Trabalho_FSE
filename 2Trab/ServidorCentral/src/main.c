@@ -8,7 +8,6 @@
 #include "../inc/servidor.h"
 #include "../inc/cliente.h"
 
-
 pthread_t t0, t1, t2, t3;
 
 int keepThreading = 1;
@@ -20,10 +19,34 @@ volatile int restartClient = 1;
 volatile int menuAberto = 0;
 int alarmeTocando = 0, alarmeLigado = 0;
 
+FILE *ptr;
+char s[64];
+void time_generate()
+{
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    strftime(s, sizeof(s), "%c", tm);
+}
+
 int main()
 {
+    ptr = fopen("logAlarme.csv", "w");
+    if (ptr == NULL)
+    {
+        printf("Error ao abrir arquivo!");
+        exit(1);
+    }
+    fprintf(ptr, "Data, Acontecimento\n");
+    fclose(ptr);
+    ptr = fopen("comandosUsuario.csv", "w");
+    if (ptr == NULL)
+    {
+        printf("Error ao abrir arquivo!");
+        exit(1);
+    }
+    fprintf(ptr, "Data, Acontecimento\n");
+    fclose(ptr);
     signal(SIGINT, trata_interrupcao);
-    signal(SIGTSTP, abre_inputs);
     pthread_create(&t0, NULL, *ligaServidor, NULL);
     pthread_create(&t2, NULL, *ligaCliente, NULL);
     pthread_create(&t1, NULL, *pegaInput, NULL);
@@ -39,11 +62,6 @@ void trata_interrupcao(int sinal)
     exit(0);
 }
 
-void abre_inputs()
-{
-    menuAberto = 1;
-    chamaMenu();
-}
 
 void loopMenu()
 {
@@ -60,7 +78,7 @@ void *pegaInput()
     do
     {
         scanf("%d", &opcao);
-        if (opcao>=0 && opcao<=5)
+        if (opcao >= 0 && opcao <= 5)
         {
             send_TCP_message(opcao);
             menuAberto = 0;
@@ -81,11 +99,12 @@ void chamaMenu()
 {
 
     system("clear");
-    printf("------- Bem vindo ao trabalho 2 -------\n");
+    printf("\n\n------- Bem vindo ao trabalho 2 -------\n");
 
     printf("Status do Distribuido: %d\n", statusServer);
-    printf("Status do Alarme: %d\n", alarmeLigado);
-    if(alarmeLigado){
+    printf("Status do Alarme: %d\n\n", alarmeLigado);
+    if (alarmeLigado)
+    {
         printf("######### ALARME TOCANDO #########\n\n");
     }
     printf("Temperatura: %f\n", globalValues.temperatura);
@@ -104,19 +123,14 @@ void chamaMenu()
     printf("SENSOR_ABERTURA_JANELA_SALA: %d\n", globalValues.sensors[5].state);
     printf("SENSOR_ABERTURA_JANELA_QUARTO_01: %d\n", globalValues.sensors[6].state);
     printf("SENSOR_ABERTURA_JANELA_QUARTO_02: %d\n", globalValues.sensors[7].state);
-    printf("\nPressione CTRL+Z para menu \n");
-    if (menuAberto)
-    {
-        printf("Qual opção deseja mudar?\n");
-        printf("0- LAMPADA_01\n");
-        printf("1- LAMPADA_02\n");
-        printf("2- LAMPADA_03\n");
-        printf("3- LAMPADA_04\n");
-        printf("4- ARCONDICIONADO_01\n");
-        printf("5- ARCONDICIONADO_02\n");
-        printf("6- Ativar o Alarme: %d\n", alarmeLigado);
-        printf("7- Voltar a info\n");
-    }
+    printf("\nSelecione uma opção para ativar ou desativar os aparelhos\n");
+    printf("0- LAMPADA_01\n");
+    printf("1- LAMPADA_02\n");
+    printf("2- LAMPADA_03\n");
+    printf("3- LAMPADA_04\n");
+    printf("4- ARCONDICIONADO_01\n");
+    printf("5- ARCONDICIONADO_02\n");
+    printf("6- Ativar o Alarme: %d\n", alarmeLigado);
 }
 
 void atualizaValor(struct servidorCentral intermediario)
@@ -166,7 +180,7 @@ void *verificaSensores()
         {
             if (globalValues.sensors[i].state && alarmeLigado)
             {
-                tocaAlarme();
+                tocaAlarme(i);
             }
         }
         sleep(1);
@@ -179,7 +193,31 @@ void setAlarme()
     alarmeLigado = !alarmeLigado;
 }
 
-void tocaAlarme()
+void tocaAlarme(int nSensor)
 {
+    ptr = fopen("logAlarme.csv", "a");
+    if (ptr == NULL)
+    {
+        printf("Error ao abrir arquivo!");
+        exit(1);
+    }
+    time_generate();
+    if (nSensor == 0)
+        fprintf(ptr, "%s, Alarme tocou pois presença foi detectada pelo SENSOR_PRESENCA_SALA\n", s);
+    if (nSensor == 1)
+        fprintf(ptr, "%s, Alarme tocou pois presença foi detectada pelo SENSOR_PRESENCA_COZINHA\n", s);
+    if (nSensor == 2)
+        fprintf(ptr, "%s, Alarme tocou pois abertura foi detectada pelo SENSOR_ABERTURA_PORTA_COZINHA\n", s);
+    if (nSensor == 3)
+        fprintf(ptr, "%s, Alarme tocou pois abertura foi detectada pelo SENSOR_ABERTURA_JANELA_COZINHA\n", s);
+    if (nSensor == 4)
+        fprintf(ptr, "%s, Alarme tocou pois abertura foi detectada pelo SENSOR_ABERTURA_PORTA_SALA\n", s);
+    if (nSensor == 5)
+        fprintf(ptr, "%s, Alarme tocou pois abertura foi detectada pelo SENSOR_ABERTURA_JANELA_SALA\n", s);
+    if (nSensor == 6)
+        fprintf(ptr, "%s, Alarme tocou pois abertura foi detectada pelo SENSOR_ABERTURA_JANELA_QUARTO_01\n", s);
+    if (nSensor == 7)
+        fprintf(ptr, "%s, Alarme tocou pois abertura foi detectada pelo SENSOR_ABERTURA_JANELA_QUARTO_02 \n", s);
+    fclose(ptr);
     system("omxplayer --no-keys beep.mp3 > /dev/null 2>&1 &");
 }

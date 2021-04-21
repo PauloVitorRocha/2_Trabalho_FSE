@@ -41,7 +41,7 @@ int Cliente()
     // Criar Socket
     if ((clienteSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
     {
-        printf("Erro no socket()");
+        printf("Erro no socket()\n");
         return 1;
     }
 

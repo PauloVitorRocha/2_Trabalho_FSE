@@ -34,7 +34,7 @@ int send_TCP_message(int nLampada)
         return 1;
     }
     else{
-        ptr1 = fopen("comandosUsuario.csv", "a");
+        ptr1 = fopen("../csv/comandosUsuario.csv", "a");
         if (ptr1 == NULL)
         {
             printf("Error ao abrir arquivo!");

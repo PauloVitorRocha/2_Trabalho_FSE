@@ -30,7 +30,7 @@ void time_generate()
 
 int main()
 {
-    ptr = fopen("logAlarme.csv", "w");
+    ptr = fopen("../csv/logAlarme.csv", "w");
     if (ptr == NULL)
     {
         printf("Error ao abrir arquivo!");
@@ -38,7 +38,7 @@ int main()
     }
     fprintf(ptr, "Data, Acontecimento\n");
     fclose(ptr);
-    ptr = fopen("comandosUsuario.csv", "w");
+    ptr = fopen("../csv/comandosUsuario.csv", "w");
     if (ptr == NULL)
     {
         printf("Error ao abrir arquivo!");
@@ -195,7 +195,7 @@ void setAlarme()
 
 void tocaAlarme(int nSensor)
 {
-    ptr = fopen("logAlarme.csv", "a");
+    ptr = fopen("../csv/logAlarme.csv", "a");
     if (ptr == NULL)
     {
         printf("Error ao abrir arquivo!");

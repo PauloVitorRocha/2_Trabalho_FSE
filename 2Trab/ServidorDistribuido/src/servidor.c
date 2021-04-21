@@ -55,7 +55,7 @@ void Servidor()
     // Bind
     if (bind(servidorSocket, (struct sockaddr *)&servidorAddr, sizeof(servidorAddr)) < 0)
     {
-        printf("Falha no Bind do Servidor Distribuido");
+        printf("Falha no Bind do Servidor Distribuido\n");
         close(servidorSocket);
         return;
     }

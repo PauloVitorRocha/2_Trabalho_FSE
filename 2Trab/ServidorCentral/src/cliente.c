@@ -21,7 +21,7 @@ int send_TCP_message(int nLampada)
 
     if (send(clienteSocket, comando, 1, 0) != tamanhoMensagem)
     {
-        printf("Erro no envio: numero de bytes enviados diferente do esperado\n");
+        // printf("Erro no envio: numero de bytes enviados diferente do esperado\n");
         return 1;
     }
     return 0;
@@ -40,7 +40,7 @@ int Cliente()
     // Criar Socket
     if ((clienteSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
     {
-        printf("Erro no socket()\n");
+        // printf("Erro no socket()\n");
         return 1;
     }
 
@@ -53,12 +53,12 @@ int Cliente()
     // Connect
     if (connect(clienteSocket, (struct sockaddr *)&servidorAddr, sizeof(servidorAddr)) < 0)
     {
-        printf("Cliente Central não conseguiu conectar com o Servidor Distribuido\n");
+        // printf("Cliente Central não conseguiu conectar com o Servidor Distribuido\n");
         return 1;
     }
     else
     {
-        printf("Sucessfully conected with server\n");
+        // printf("Sucessfully conected with server\n");
     }
 
     return 0;

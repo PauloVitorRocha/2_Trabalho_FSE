@@ -27,7 +27,6 @@
 #define IGNORE_CHANGE_BELOW_USEC 10000
 
 void gpio_init();
-// int init_bcm();
 void toggle();
 int gpioLigaEquipamentos(int option);
 int init_bcm();

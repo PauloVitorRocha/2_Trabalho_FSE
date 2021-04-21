@@ -19,7 +19,6 @@ volatile int restartServer = 1;
 volatile int restartClient = 1;
 volatile int menuAberto = 0;
 int alarmeTocando = 0, alarmeLigado = 0;
-pthread_mutex_t lockInput = PTHREAD_MUTEX_INITIALIZER;
 
 int main()
 {
@@ -51,7 +50,7 @@ void loopMenu()
     while (1)
     {
         chamaMenu();
-        usleep(5000000);
+        usleep(1000000);
     }
 }
 
@@ -61,7 +60,7 @@ void *pegaInput()
     do
     {
         scanf("%d", &opcao);
-        if (opcao != 6 && opcao != 7)
+        if (opcao>=0 && opcao<=5)
         {
             send_TCP_message(opcao);
             menuAberto = 0;
@@ -85,7 +84,10 @@ void chamaMenu()
     printf("------- Bem vindo ao trabalho 2 -------\n");
 
     printf("Status do Distribuido: %d\n", statusServer);
-    printf("Status do Alarme: %d\n\n", alarmeLigado);
+    printf("Status do Alarme: %d\n", alarmeLigado);
+    if(alarmeLigado){
+        printf("######### ALARME TOCANDO #########\n\n");
+    }
     printf("Temperatura: %f\n", globalValues.temperatura);
     printf("Umidade: %f\n", globalValues.umidade);
     printf("LAMPADA_01: %d\n", globalValues.machines[0].state);

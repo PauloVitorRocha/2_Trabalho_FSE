@@ -24,7 +24,7 @@ void TrataClienteTCP()
     {
         if ((tamanhoRecebido = recv(socketCliente, (void *)intermediario, sizeof(struct servidorCentral), 0)) < 0)
         {
-            printf("Erro no recv()\n");
+            // printf("Erro no recv()\n");
         }
         else
         {
@@ -47,7 +47,7 @@ void Servidor()
     // Abrir Socket
     if ((servidorSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
     {
-        printf("falha no socket do Servidor\n");
+        // printf("falha no socket do Servidor\n");
         close(servidorSocket);
         return;
     }
@@ -61,7 +61,7 @@ void Servidor()
     // Bind
     if (bind(servidorSocket, (struct sockaddr *)&servidorAddr, sizeof(servidorAddr)) < 0)
     {
-        printf("Falha no Bind do Servidor Central\n");
+        // printf("Falha no Bind do Servidor Central\n");
         close(servidorSocket);
         return;
     }
@@ -69,7 +69,7 @@ void Servidor()
     // Listen
     if (listen(servidorSocket, 10) < 0)
     {
-        printf("Falha no Listen\n");
+        // printf("Falha no Listen\n");
         close(servidorSocket);
         return;
     }
@@ -77,15 +77,15 @@ void Servidor()
     while (1)
     {
         clienteLength = sizeof(clienteAddr);
-        printf("Aguardando conexão\n");
+        // printf("Aguardando conexão\n");
         if ((socketCliente = accept(servidorSocket, (struct sockaddr *)&clienteAddr, &clienteLength)) < 0)
         {
-            printf("Falha no Accept\n");
+            // printf("Falha no Accept\n");
             continue;
         }
         else
         {
-            printf("Conectado com sucesso\n");
+            // printf("Conectado com sucesso\n");
             statusServer=1;
             TrataClienteTCP();
         }

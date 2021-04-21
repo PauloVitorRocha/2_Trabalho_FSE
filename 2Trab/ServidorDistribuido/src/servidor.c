@@ -5,7 +5,6 @@
 #include <unistd.h>
 #include "../inc/servidor.h"
 
-
 struct sockaddr_in servidorAddr;
 struct sockaddr_in clienteAddr;
 unsigned short servidorPorta;
@@ -28,8 +27,8 @@ void TrataClienteTCP()
         {
             printf("Comando recebido= %c\n", buffer[0]);
         }
-
-        gpioLigaEquipamentos(atoi(buffer));
+        if (atoi(buffer) <= 5 && atoi(buffer) >= 0)
+            gpioLigaEquipamentos(atoi(buffer));
 
     } while (tamanhoRecebido > 0);
 }

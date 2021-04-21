@@ -1,5 +1,5 @@
 # Projeto 2
-## Fundamentos de Sistemas Embarcado
+## Fundamentos de Sistemas Embarcados
 
 **Nome**: Paulo Vítor Coelho da Rocha
 

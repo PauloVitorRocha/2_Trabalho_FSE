@@ -8,6 +8,8 @@
 ### Executando o projeto
 ```sh
 git clone https://github.com/PauloVitorRocha/2_Trabalho_FSE.git
+
+use nas duas rasps:
 cd 2_Trabalho_FSE/2Trab/
 
 na rasp 43 use os comandos:

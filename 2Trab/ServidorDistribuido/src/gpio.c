@@ -268,6 +268,7 @@ void toggle()
     wiringPiISR(sensors[5].port, INT_EDGE_BOTH, &handleJANELA_SALA);
     wiringPiISR(sensors[6].port, INT_EDGE_BOTH, &handleJANELA_QUARTO_01);
     wiringPiISR(sensors[7].port, INT_EDGE_BOTH, &handleJANELA_QUARTO_02);
+}
 
 int gpioLigaEquipamentos(int option)
 {

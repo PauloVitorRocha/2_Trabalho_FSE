@@ -25,9 +25,9 @@ struct servidorCentral
 extern volatile int restartServer;
 extern volatile int statusServer;
 extern volatile int restartClient;
+extern volatile int keepThreading;
 
 void Servidor();
-void closeSocket();
 void TrataClienteTCP();
-
+void trata_interrupcao_Servidor();
 #endif

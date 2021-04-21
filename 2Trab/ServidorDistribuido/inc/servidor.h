@@ -25,10 +25,10 @@ struct servidorDistribuido
 
 extern volatile int restartServer;
 extern volatile int restartClient;
+extern volatile int keepThreading;
 
 void trata_interrupcao_Servidor();
 void TrataClienteTCP();
 void Servidor();
-void closeSocket();
 
 #endif

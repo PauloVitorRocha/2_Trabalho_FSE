@@ -222,7 +222,3 @@ int bme280Start(int iChannel, int iAddr, int *T, int *P, int *H)
     bme280Init(iChannel, iAddr);
     bme280ReadValues(T, P, H);
 }
-
-int endI2C(){
-    close(file_i2c);
-    }

@@ -12,5 +12,5 @@
 
 int Cliente();
 int send_TCP_message(int nLampada);
-void closeClienteSocket();
+void trata_interrupcao_Cliente();
 #endif

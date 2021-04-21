@@ -43,7 +43,7 @@ void Servidor()
     unsigned int clienteLength;
 
     // Porta Servidor Distribuido
-    servidorPorta = 10033;
+    servidorPorta = 10024;
     // Abrir Socket
     if ((servidorSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
     {
@@ -51,6 +51,8 @@ void Servidor()
         close(servidorSocket);
         return;
     }
+    if (setsockopt(servidorSocket, SOL_SOCKET, SO_REUSEADDR, &(int){1}, sizeof(int)) < 0)
+        printf("setsockopt(SO_REUSEADDR) failed");
 
     // Montar a estrutura sockaddr_in
     memset(&servidorAddr, 0, sizeof(servidorAddr)); // Zerando a estrutura de dados
@@ -67,14 +69,14 @@ void Servidor()
     }
 
     // Listen
-    if (listen(servidorSocket, 10) < 0)
+    if (listen(servidorSocket, 1) < 0)
     {
         // printf("Falha no Listen\n");
         close(servidorSocket);
         return;
     }
 
-    while (1)
+    while (keepThreading)
     {
         clienteLength = sizeof(clienteAddr);
         // printf("Aguardando conexão\n");
@@ -94,7 +96,8 @@ void Servidor()
     }
     close(servidorSocket);
 }
-void closeSocket()
+
+void trata_interrupcao_Servidor()
 {
     close(socketCliente);
     close(servidorSocket);

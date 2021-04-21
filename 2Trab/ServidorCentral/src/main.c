@@ -10,14 +10,14 @@
 
 pthread_t t0, t1, t2, t3;
 
-int keepThreading = 1;
+volatile int keepThreading = 1;
 struct servidorCentral *values;
 struct servidorCentral globalValues;
 volatile int statusServer = 0;
 volatile int restartServer = 1;
 volatile int restartClient = 1;
 volatile int menuAberto = 0;
-int alarmeTocando = 0, alarmeLigado = 0;
+int alarmeTocando = 0, alarmeLigado = 0, showMsg = 0;
 
 FILE *ptr, *ptr1;
 char s[64];
@@ -57,11 +57,19 @@ int main()
 
 void trata_interrupcao(int sinal)
 {
-    keepThreading=0;
-    closeSocket();
-    exit(0);
+    if (statusServer == 0)
+    {
+        keepThreading = 0;
+        trata_interrupcao_Cliente();
+        trata_interrupcao_Servidor();
+        printf("\nEncerrando\n");
+        exit(0);
+    }
+    else
+    {
+        showMsg = 1;
+    }
 }
-
 
 void loopMenu()
 {
@@ -78,6 +86,7 @@ void *pegaInput()
     do
     {
         scanf("%d", &opcao);
+        sleep(1);
         if (opcao >= 0 && opcao <= 5)
         {
             send_TCP_message(opcao);
@@ -99,16 +108,19 @@ void chamaMenu()
 {
 
     system("clear");
-    printf("\n\n------- Bem vindo ao trabalho 2 -------\n");
+    if (showMsg)
+        printf("Feche primeiro o servidor distribuido\n");
+    
+    printf("\n------- Bem vindo ao trabalho 2 -------\n");
 
     printf("Status do Distribuido: %d\n", statusServer);
     printf("Status do Alarme: %d\n\n", alarmeLigado);
-    if (alarmeLigado)
+    if (alarmeTocando)
     {
         printf("######### ALARME TOCANDO #########\n\n");
     }
-    printf("Temperatura: %f\n", globalValues.temperatura);
-    printf("Umidade: %f\n", globalValues.umidade);
+    printf("Temperatura: %.02f\n", globalValues.temperatura);
+    printf("Umidade: %.02f\n", globalValues.umidade);
     printf("LAMPADA_01: %d\n", globalValues.machines[0].state);
     printf("LAMPADA_02: %d\n", globalValues.machines[1].state);
     printf("LAMPADA_03: %d\n", globalValues.machines[2].state);
@@ -157,6 +169,7 @@ void *ligaServidor()
         Servidor();
         usleep(2000000);
     }
+    return NULL;
 }
 
 void *ligaCliente()
@@ -176,14 +189,18 @@ void *verificaSensores()
 {
     while (keepThreading)
     {
+        int alarmeTocou = 0;
         for (int i = 0; i < 8; i++)
         {
             if (globalValues.sensors[i].state && alarmeLigado)
             {
                 tocaAlarme(i);
+                alarmeTocou = 1;
             }
         }
-        sleep(1);
+        if (!alarmeTocou)
+            alarmeTocando = 0;
+        usleep(1000000);
     }
     return NULL;
 }
@@ -195,6 +212,7 @@ void setAlarme()
 
 void tocaAlarme(int nSensor)
 {
+    alarmeTocando = 1;
     ptr = fopen("../csv/logAlarme.csv", "a");
     if (ptr == NULL)
     {

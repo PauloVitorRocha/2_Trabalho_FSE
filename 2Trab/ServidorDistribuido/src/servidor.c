@@ -15,11 +15,11 @@ int socketCliente;
 
 void TrataClienteTCP()
 {
-    int tamanhoRecebido;
+    int tamanhoRecebido = 1;
     char buffer[16];
     do
     {
-        if ((tamanhoRecebido = recv(socketCliente, buffer, 16, 0)) < 0)
+        if ((tamanhoRecebido = recv(socketCliente, buffer, 16, 0)) <= 0)
         {
             printf("Erro no recv()\n");
         }
@@ -29,7 +29,7 @@ void TrataClienteTCP()
         }
         if (atoi(buffer) <= 5 && atoi(buffer) >= 0)
             gpioLigaEquipamentos(atoi(buffer));
-
+            
     } while (tamanhoRecebido > 0);
 }
 
@@ -37,7 +37,7 @@ void Servidor()
 {
 
     // Porta Servidor Distribuido
-    servidorPorta = 10133;
+    servidorPorta = 10124;
     // Abrir Socket
     if ((servidorSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
     {
@@ -45,6 +45,8 @@ void Servidor()
         close(servidorSocket);
         return;
     }
+    if (setsockopt(servidorSocket, SOL_SOCKET, SO_REUSEADDR, &(int){1}, sizeof(int)) < 0)
+        printf("setsockopt(SO_REUSEADDR) failed");
 
     // Montar a estrutura sockaddr_in
     memset(&servidorAddr, 0, sizeof(servidorAddr)); // Zerando a estrutura de dados
@@ -61,14 +63,14 @@ void Servidor()
     }
 
     // Listen
-    if (listen(servidorSocket, 10) < 0)
+    if (listen(servidorSocket, 1) < 0)
     {
         printf("Falha no Listen\n");
         close(servidorSocket);
         return;
     }
 
-    while (1)
+    while (keepThreading)
     {
         clienteLength = sizeof(clienteAddr);
         if ((socketCliente = accept(servidorSocket, (struct sockaddr *)&clienteAddr, &clienteLength)) < 0)
@@ -87,8 +89,7 @@ void Servidor()
     close(servidorSocket);
 }
 
-void closeSocket()
+void trata_interrupcao_Servidor()
 {
-    close(socketCliente);
     close(servidorSocket);
 }

@@ -4,6 +4,5 @@
 int bme280Init(int iChannel, int iAddr);
 int bme280ReadValues(int *T, int *P, int *H);
 int bme280Start(int iChannel, int iAddr, int *T, int *P, int *H);
-int endI2C();
 
 #endif // __BME280__

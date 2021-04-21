@@ -21,7 +21,7 @@ pthread_mutex_t lock3 = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t lock4 = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t lock5 = PTHREAD_MUTEX_INITIALIZER;
 
-int keepThreading = 1;
+volatile int keepThreading = 1;
 volatile int restartClient = 1;
 volatile int statusServer = 1;
 volatile int restartServer = 1;
@@ -63,8 +63,8 @@ void trata_interrupcao(int sinal)
 {
     // bcm2835_close();
     keepThreading = 0;
-    endI2C();
-    closeSocket();
+    trata_interrupcao_Servidor();
+    trata_interrupcao_Cliente();
     printf("\nEncerrando\n");
     exit(0);
 }
@@ -95,6 +95,7 @@ void *connectServer()
         Servidor();
         usleep(2000000);
     }
+    return NULL;
 }
 
 void *sendUpdate()

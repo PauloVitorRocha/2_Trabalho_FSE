@@ -22,3 +22,5 @@ cd ServidorDistribuido/
 make
 make run
 ```
+#### Observação
+A tela do termianl para exibição de todas as informações tem que ser no minimo 57x32

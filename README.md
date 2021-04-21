@@ -9,10 +9,12 @@
 ```sh
 git clone https://github.com/PauloVitorRocha/2_Trabalho_FSE.git
 cd 2_Trabalho_FSE/2Trab/
+
 na rasp 43 use os comandos:
 cd ServidorCentral/
 make
 make run
+
 agora na rasp 42 use os comandos:
 cd ServidorDistribuido/
 make

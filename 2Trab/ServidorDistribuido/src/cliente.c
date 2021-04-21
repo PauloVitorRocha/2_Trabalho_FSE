@@ -65,7 +65,7 @@ int Cliente()
     return 0;
 }
 
-void closeSocket()
+void closeClienteSocket()
 {
     close(clienteSocket);
 }

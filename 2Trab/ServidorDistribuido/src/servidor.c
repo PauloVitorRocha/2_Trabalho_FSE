@@ -86,3 +86,9 @@ void Servidor()
     }
     close(servidorSocket);
 }
+
+void closeSocket()
+{
+    close(socketCliente);
+    close(servidorSocket);
+}

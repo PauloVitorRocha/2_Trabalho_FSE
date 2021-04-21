@@ -29,5 +29,6 @@ extern volatile int restartClient;
 void trata_interrupcao_Servidor();
 void TrataClienteTCP();
 void Servidor();
+void closeSocket();
 
 #endif

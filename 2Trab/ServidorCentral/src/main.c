@@ -57,7 +57,7 @@ int main()
 
 void trata_interrupcao(int sinal)
 {
-
+    keepThreading=0;
     closeSocket();
     exit(0);
 }

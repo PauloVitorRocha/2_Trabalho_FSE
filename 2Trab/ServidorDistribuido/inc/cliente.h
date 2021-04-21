@@ -12,5 +12,5 @@
 
 int Cliente();
 int send_TCP_message();
-void closeSocket();
+void closeClienteSocket();
 #endif

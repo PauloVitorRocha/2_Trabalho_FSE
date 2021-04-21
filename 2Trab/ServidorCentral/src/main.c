@@ -19,7 +19,7 @@ volatile int restartClient = 1;
 volatile int menuAberto = 0;
 int alarmeTocando = 0, alarmeLigado = 0;
 
-FILE *ptr;
+FILE *ptr, *ptr1;
 char s[64];
 void time_generate()
 {
@@ -33,19 +33,19 @@ int main()
     ptr = fopen("../csv/logAlarme.csv", "w");
     if (ptr == NULL)
     {
-        printf("Error ao abrir arquivo!");
+        printf("Error ao abrir arquivo log!");
         exit(1);
     }
     fprintf(ptr, "Data, Acontecimento\n");
     fclose(ptr);
-    ptr = fopen("../csv/comandosUsuario.csv", "w");
-    if (ptr == NULL)
+    ptr1 = fopen("../csv/comandosUsuario.csv", "w");
+    if (ptr1 == NULL)
     {
-        printf("Error ao abrir arquivo!");
+        printf("Error ao abrir arquivo comandos!");
         exit(1);
     }
-    fprintf(ptr, "Data, Acontecimento\n");
-    fclose(ptr);
+    fprintf(ptr1, "Data, Acontecimento\n");
+    fclose(ptr1);
     signal(SIGINT, trata_interrupcao);
     pthread_create(&t0, NULL, *ligaServidor, NULL);
     pthread_create(&t2, NULL, *ligaCliente, NULL);
